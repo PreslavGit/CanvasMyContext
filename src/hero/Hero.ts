@@ -19,7 +19,7 @@ export class Hero{
         ctx.fillRect(this.x, this.y, this.size, this.size)
     }
 
-    move(direction: direction, moveBy: number){
+    private move(direction: direction, moveBy: number){
         switch (direction) {
             case 'down':
                 this.draw(this.x, this.y + moveBy)
@@ -33,8 +33,6 @@ export class Hero{
             case 'up':
                 this.draw(this.x, this.y - moveBy)
                 break;
-            default:
-                break;
         }
     }
 
@@ -43,5 +41,22 @@ export class Hero{
         this.y = y
         this.ctx.fillStyle = this.color
         this.ctx.fillRect(this.x, this.y, this.size, this.size)
+    }
+
+    public moveEventHandler(e: KeyboardEvent, moveBy = 5){
+        switch (e.key) {
+            case 'a':
+                this.move('left', moveBy)
+                break;
+            case 'w':
+                this.move('up', moveBy)
+                break;
+            case 's':
+                this.move('down', moveBy)
+                break;
+            case 'd':
+                this.move('right', moveBy)
+                break;
+        }
     }
 }
