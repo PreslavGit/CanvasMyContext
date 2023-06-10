@@ -1,67 +1,62 @@
-import { drawBoard } from "../global/board"
+import { Entity } from "../global/Entity.interface"
+import { Position, moveKeys } from "../types"
 
-export class Hero {
+export class Hero implements Entity{
     private color: string
     private size: number
-    private x: number = 0
-    private y: number = 0
+    private currPos: Position = {x: 0, y: 0}
     private ctx: CanvasRenderingContext2D
 
     constructor(color: string, size: number, ctx: CanvasRenderingContext2D) {
         this.color = color
         this.size = size
         this.ctx = ctx
-        this.initialDraw()
+        this.draw()
         this.moveListener()
     }
 
-    private initialDraw() {
-        this.ctx.fillStyle = this.color
-        this.ctx.fillRect(this.x, this.y, this.size, this.size)
+    public getPos(): Position{ return { x: this.currPos.x + this.size/2, y: this.currPos.y + this.size/2 } }
+
+    public render(){
+        this.draw()
     }
 
-    private move(key: string, moveBy = 1) {
-        switch (key) {
-            case 's':
-                this.draw(this.x, this.y + moveBy)
-                break;
-            case 'a':
-                this.draw(this.x - moveBy, this.y)
-                break;
-            case 'd':
-                this.draw(this.x + moveBy, this.y)
-                break;
-            case 'w':
-                this.draw(this.x, this.y - moveBy)
-                break;
-        }
+    private draw() {
+        this.ctx.fillStyle = this.color
+        this.ctx.fillRect(this.currPos.x, this.currPos.y, this.size, this.size)
     }
 
-    private draw(x: number, y: number) {
-        this.x = x
-        this.y = y
+    private move(key: string, moveBy = 0.5) {
+        if(key === 's'){ this.moveTo({x: this.currPos.x, y: this.currPos.y + moveBy}) }
+        if(key === 'a'){ this.moveTo({x: this.currPos.x - moveBy, y: this.currPos.y}) }
+        if(key === 'd'){ this.moveTo({x: this.currPos.x + moveBy, y: this.currPos.y}) }
+        if(key === 'w'){ this.moveTo({x: this.currPos.x, y: this.currPos.y - moveBy}) }
+    }
+
+    private moveTo(pos: Position) {
+        this.currPos = pos
         this.ctx.fillStyle = this.color
-        this.ctx.fillRect(this.x, this.y, this.size, this.size)
+        this.ctx.fillRect(this.currPos.x, this.currPos.y, this.size, this.size)
     }
 
     private moveListener() {
         let intervalId: number | undefined
-        const allowedKeys = ['a', 's', 'd', 'w']
         let lastKey = ''
         window.addEventListener('keydown', (e) => {
             clearInterval(intervalId)
             intervalId = undefined
-            if (allowedKeys.includes(e.key)) {
+            if (moveKeys.includes(e.key)) {
                 lastKey = e.key
                 if (!intervalId) {
                     intervalId = setInterval(() => {
-                        drawBoard(this.ctx)
                         this.move(e.key)
-                    }, 1000 / 200)
+                    })
                 }
             }
             window.addEventListener('keyup', ({ key }) => {
-                if (key === lastKey) { clearInterval(intervalId) }
+                if (key === lastKey) { 
+                    clearInterval(intervalId) 
+                }
             })
         })
     }
