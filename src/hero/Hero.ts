@@ -4,7 +4,7 @@ import { Position, moveKeys } from "../types"
 export class Hero implements Entity{
     private color: string
     private size: number
-    private currPos: Position = {x: 0, y: 0}
+    private currPos: Position = {x: 100, y: 100}
     private ctx: CanvasRenderingContext2D
 
     constructor(color: string, size: number, ctx: CanvasRenderingContext2D) {

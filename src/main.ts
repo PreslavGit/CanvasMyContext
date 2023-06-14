@@ -5,7 +5,7 @@ import { Hero } from "./hero/Hero"
 
 const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-const entitiesList: Entity[] = []
+let entitiesList: Entity[] = []
 
 const hero = new Hero("red", 10, ctx)
 entitiesList.push(hero)
@@ -21,4 +21,4 @@ const gameLoop = setInterval(() => {
     entitiesList.forEach(ent => {
         ent.render()
     })
-}, 1000/30)
+}, 1000/60)
